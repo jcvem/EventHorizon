@@ -140,6 +140,43 @@ EventsHorizon/
 
 ---
 
+## Vercel 部署與 Firebase 環境變數設定 (Vercel Deployment Guide)
+
+若需部署專案至 **Vercel** 並連結專屬 Firebase 專案 (`joecalendar-e8327`)，請遵循以下步驟：
+
+### 1. 於 Firebase Console 取得 Web 密鑰
+1. 造訪 [Firebase Console](https://console.firebase.google.com/) 並選擇專案 **`joecalendar-e8327`**。
+2. 點擊左上角齒輪 ⚙️ (**專案設定 Project Settings**) -> **一般 (General)**。
+3. 於「您的應用程式 (Your apps)」下方複製 Web 應用程式之 `firebaseConfig` 變數。
+
+### 2. 於 Vercel Dashboard 設定環境變數 (Environment Variables)
+進入 Vercel 專案設定頁面 (**Settings -> Environment Variables**)，新增以下 6 組環境變數（可參考 [.env.example](file:///Users/jc/Code/EventsHorizon/.env.example)）：
+
+| 變數名稱 (Key) | 設定範例 (Value) | 說明 |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | `joecalendar-e8327` | 專案 ID |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | `AIzaSy...` | Firebase Web API 金鑰 |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | `joecalendar-e8327.firebaseapp.com` | Auth 網域 |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | `joecalendar-e8327.appspot.com` | Storage Bucket 儲存貯體 |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | `123456789012` | Messaging Sender ID |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | `1:123456789012:web:abcdef...` | Web App ID |
+
+### 3. 設定 Firestore 安全規則 (Firestore Security Rules)
+於 Firebase Console -> **Firestore Database** -> **規則 (Rules)** 設定允許存取 `events` 集合：
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /events/{eventId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.title != null;
+    }
+  }
+}
+```
+
+---
+
 ## 遠端版本庫狀態 (Remote Repository Note)
 
 本機 Git 已初始化於 `main` 分支。

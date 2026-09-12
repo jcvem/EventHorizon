@@ -3,6 +3,8 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { Event, EventCategory, EventFilterState } from "@/lib/events/types";
 import { getRolling30DayWindow, filterEvents, calculateCityEventCounts, calculateDateEventCounts } from "@/lib/events/filter";
+import { availableAdapters } from "@/lib/events/sources";
+import { FirebaseSourceAdapter } from "@/lib/events/firebase-adapter";
 import { TaiwanMap } from "./taiwan-map";
 import { MonthCalendar } from "./month-calendar";
 import { EventList } from "./event-list";
@@ -158,7 +160,7 @@ export const HorizonShell: React.FC<HorizonShellProps> = ({ initialEvents }) => 
   const handleFetchFirestoreData = useCallback(async () => {
     setIsFetchingLive(true);
     try {
-      const adapter = availableAdapters.firebase as import("@/lib/events/firebase-adapter").FirebaseSourceAdapter;
+      const adapter = availableAdapters.firebase as FirebaseSourceAdapter;
       const res = await adapter.fetchEvents();
       if (res.events && res.events.length > 0) {
         handleImportEvents(res.events);
@@ -188,7 +190,7 @@ export const HorizonShell: React.FC<HorizonShellProps> = ({ initialEvents }) => 
   const handleSyncToFirestore = useCallback(async () => {
     setIsFetchingLive(true);
     try {
-      const adapter = availableAdapters.firebase as import("@/lib/events/firebase-adapter").FirebaseSourceAdapter;
+      const adapter = availableAdapters.firebase as FirebaseSourceAdapter;
       const res = await adapter.saveEvents(allEvents);
       return {
         success: res.count > 0,
