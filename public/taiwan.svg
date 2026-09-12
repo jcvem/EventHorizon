@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700" fill="none" stroke="currentColor">
+  <!-- Metadata / Attribution: Taiwan Open Data Simplified Vector Coastline (NLSC/OSM) -->
+  <metadata>
+    <source>Taiwan Geographical Contour Vectors</source>
+    <license>ODbL / Open Government Data License Taiwan</license>
+  </metadata>
+  <g class="taiwan-islands" stroke="#DDD6C6" stroke-width="1.2">
+    <!-- Main Island -->
+    <path class="main-island" fill="#F1ECE1" d="M 345,65 C 355,68 365,75 360,85 C 352,95 365,115 370,135 C 375,155 360,180 355,210 C 350,240 355,270 350,300 C 345,330 335,360 325,395 C 315,430 305,465 290,500 C 275,535 255,565 235,590 C 220,610 205,620 195,618 C 185,616 182,605 180,590 C 175,565 160,540 150,510 C 140,480 135,450 138,420 C 142,390 148,360 155,330 C 162,300 170,270 180,240 C 190,210 205,185 225,160 C 245,135 270,110 295,90 C 315,75 330,62 345,65 Z" />
+    <!-- Ridge / Spine accent line -->
+    <path class="spine" fill="none" stroke="#DDD6C6" stroke-width="0.8" stroke-dasharray="3 3" d="M 330,120 Q 300,240 270,360 T 235,540" />
+    <!-- Penghu Islands -->
+    <path class="penghu" fill="#F1ECE1" d="M 50,335 C 45,330 55,320 60,325 C 65,330 65,345 60,350 C 55,355 45,350 50,335 Z M 65,355 C 62,352 68,348 70,352 C 72,356 68,360 65,355 Z M 42,345 C 40,340 45,338 46,342 C 47,346 44,348 42,345 Z" />
+    <!-- Kinmen Islands -->
+    <path class="kinmen" fill="#F1ECE1" d="M 45,95 C 40,90 55,85 62,90 C 68,95 65,102 58,105 C 50,108 42,102 45,95 Z M 35,98 C 32,96 38,92 40,95 C 42,98 38,100 35,98 Z" />
+    <!-- Matsu (Lienchiang) -->
+    <path class="matsu" fill="#F1ECE1" d="M 72,48 C 70,44 78,42 82,45 C 85,48 82,54 78,54 C 74,54 70,51 72,48 Z M 86,52 C 84,50 88,48 90,51 C 92,53 89,55 86,52 Z" />
+    <!-- Green Island (綠島) -->
+    <path class="green-island" fill="#F1ECE1" d="M 315,480 C 312,477 318,474 321,477 C 324,480 321,485 317,485 C 314,485 312,482 315,480 Z" />
+    <!-- Orchid Island (蘭嶼) -->
+    <path class="orchid-island" fill="#F1ECE1" d="M 325,550 C 320,545 328,540 332,545 C 335,550 332,558 327,558 C 322,558 321,553 325,550 Z" />
+  </g>
+</svg>

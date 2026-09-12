@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-paper: #F7F4EB;
+  --bg-paper-subtle: #F1ECE1;
+  --bg-paper-card: #FCFAF5;
+  --ink-primary: #1B2A28;
+  --ink-secondary: #3D5250;
+  --ink-muted: #697F7D;
+  --ochre: #C05C2B;
+  --rule: #DDD6C6;
+}
+
+body {
+  background-color: var(--bg-paper);
+  color: var(--ink-primary);
+  font-family: "Noto Sans TC", "PingFang TC", "Lantinghei TC", "Microsoft JhengHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, .font-serif {
+  font-family: "Noto Serif TC", "Songti TC", "Source Han Serif TW", Baskerville, Georgia, serif;
+}
+
+/* Accessible focus styling */
+*:focus-visible {
+  outline: 2px solid #C05C2B;
+  outline-offset: 2px;
+}
+
+/* Editorial hairline rules */
+.hairline-b {
+  border-bottom: 1px solid #DDD6C6;
+}
+.hairline-r {
+  border-right: 1px solid #DDD6C6;
+}
+
+/* Elegant field guide scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1ECE1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #BCB3A0;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #697F7D;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

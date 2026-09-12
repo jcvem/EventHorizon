@@ -1,0 +1,40 @@
+Implement the EventsHorizon Taiwan events web app under /Users/jc/Code/EventsHorizon. This is an execution task: build and verify the actual app, not just a plan or screenshot.
+
+Read the full implementation plan first:
+/Users/jc/.hermes/plans/2026-09-10_EventsHorizon-events-calendar-map.md
+
+Product requirements:
+- Traditional Chinese local-first web app showing events in the rolling next 30 days.
+- Desktop main UI: left ~50% Taiwan map with city/county event markers; right ~50% with calendar at top and scrollable event list below.
+- Mobile: map stacks above calendar/list.
+- Broad categories: 親子、音樂、展覽、表演、戶外、講座、節慶、市集、運動、其他.
+- Selecting category, date, city/map marker, or event list item synchronizes the other panels; reset clears filters.
+- Event cards show date/time, title, category, city/venue, source/provenance, price when known, and external link when available.
+- Rolling 30-day scope, Asia/Taipei display timezone.
+- At least 20 deterministic demo events across Taiwan regions/categories. Clearly label demo data; do not present it as live.
+- Typed normalized Event model, validation, deduplication, filtering tests.
+- Implement a typed source-adapter boundary and safe local JSON import/validation route. Do not fabricate live data. If attempting a public event feed, curl/verify endpoint and schema first; if blocked, document NEED_API_ACCESS and keep demo mode working.
+- Lightweight Taiwan SVG/marker map with attribution/source note; no Google/Mapbox token or required map tile provider.
+- Next.js TypeScript App Router preferred; use the repo's own conventions if files already exist.
+- Create DESIGN.md. Use an editorial Taiwan field-guide aesthetic: warm paper/off-white, ink teal-charcoal, one ochre accent, hairline rules, map linework, distinctive serif/grotesk typography. Avoid purple/indigo/violet gradients, Inter/Roboto/Arial, glassmorphism, glow, pill-heavy generic AI dashboard styling.
+
+Suggested structure:
+app/, components/, lib/events/{types,normalize,filter,demo,sources,storage}, lib/map/taiwan.ts, public/taiwan.svg, tests/, scripts/validate-events.ts, README.md, DESIGN.md.
+
+Constraints:
+- No API keys, private credentials, or fake live event claims.
+- No required backend account for the MVP.
+- Do not leave TODO/stub paths in the working experience.
+- Accessibility: keyboard-selectable markers/filters, focus states, 44px touch targets, reduced motion.
+- Keep all edits inside /Users/jc/Code/EventsHorizon.
+
+Verification required before completion:
+- npm install or npm ci
+- npm run lint
+- npm test -- --runInBand (adapt if test runner differs)
+- npm run build
+- Start npm run dev and perform a real browser smoke test of map, calendar, list, category filter, date filter, reset, and responsive layout. Confirm UI uses actual event state, not mocks disconnected from data.
+- Audit output for purple/indigo/violet and Inter/Roboto/Arial imports and remove them.
+- Report changed files, actual command outputs, assumptions, data-source status, and limitations. Do not claim success based only on intentions.
+
+This will later be committed to a private GitHub repository named EventsHorizon; do not put secrets in the repo. Do not modify unrelated repositories.
