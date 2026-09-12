@@ -115,10 +115,13 @@ export class MinistryOfCultureAdapter implements EventSourceAdapter {
   }
 }
 
+import { FirebaseSourceAdapter } from "./firebase-adapter";
+
 /**
  * Registry of adapters
  */
 export const availableAdapters: Record<string, EventSourceAdapter> = {
   demo: new DemoSourceAdapter(),
   moc: new MinistryOfCultureAdapter(),
+  firebase: new FirebaseSourceAdapter(),
 };

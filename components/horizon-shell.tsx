@@ -155,6 +155,57 @@ export const HorizonShell: React.FC<HorizonShellProps> = ({ initialEvents }) => 
     }
   }, [handleImportEvents]);
 
+  const handleFetchFirestoreData = useCallback(async () => {
+    setIsFetchingLive(true);
+    try {
+      const adapter = availableAdapters.firebase as import("@/lib/events/firebase-adapter").FirebaseSourceAdapter;
+      const res = await adapter.fetchEvents();
+      if (res.events && res.events.length > 0) {
+        handleImportEvents(res.events);
+        return {
+          success: true,
+          count: res.events.length,
+          message: `成功讀取 Firebase (joecalendar-e8327) Firestore，已載入 ${res.events.length} 筆活動資料！`,
+        };
+      } else {
+        return {
+          success: false,
+          count: 0,
+          message: res.warnings[0] || "Firebase (joecalendar-e8327) 資料庫目前尚無活動文件，可以點擊「同步至 Firestore」進行首次寫入。",
+        };
+      }
+    } catch (err: any) {
+      return {
+        success: false,
+        count: 0,
+        message: `Firebase 連線異常: ${err.message || String(err)}`,
+      };
+    } finally {
+      setIsFetchingLive(false);
+    }
+  }, [handleImportEvents]);
+
+  const handleSyncToFirestore = useCallback(async () => {
+    setIsFetchingLive(true);
+    try {
+      const adapter = availableAdapters.firebase as import("@/lib/events/firebase-adapter").FirebaseSourceAdapter;
+      const res = await adapter.saveEvents(allEvents);
+      return {
+        success: res.count > 0,
+        count: res.count,
+        message: `成功同步 ${res.count} 筆活動至 Firebase (joecalendar-e8327) Firestore 雲端資料庫！`,
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        count: 0,
+        message: `同步至 Firebase 失敗: ${err.message || String(err)}`,
+      };
+    } finally {
+      setIsFetchingLive(false);
+    }
+  }, [allEvents]);
+
   // Active filter summary labels for UI
   const activeFilterSummary = useMemo(() => {
     const labels: string[] = [];
@@ -263,11 +314,11 @@ export const HorizonShell: React.FC<HorizonShellProps> = ({ initialEvents }) => 
 
       {/* Main 50/50 Desktop Split Layout / Mobile Stack Layout */}
       <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-full">
-          {/* Left Panel (~50% Desktop): Interactive Taiwan Map */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Left Panel (~50% Desktop): Sticky Interactive Taiwan Map */}
           <section
             aria-label="臺灣地理地圖"
-            className="lg:col-span-6 flex flex-col min-h-[460px] lg:min-h-[700px]"
+            className="lg:col-span-6 lg:sticky lg:top-20 z-10 flex flex-col"
           >
             <TaiwanMap
               selectedCity={filters.city || "all"}
@@ -280,7 +331,7 @@ export const HorizonShell: React.FC<HorizonShellProps> = ({ initialEvents }) => 
           {/* Right Panel (~50% Desktop): Month Calendar Top + Scrollable Event List Below */}
           <section
             aria-label="活動日曆與清單"
-            className="lg:col-span-6 flex flex-col gap-4 min-h-[700px]"
+            className="lg:col-span-6 flex flex-col gap-4 min-h-[600px]"
           >
             {/* Calendar on Top */}
             <div className="shrink-0">
@@ -340,6 +391,8 @@ export const HorizonShell: React.FC<HorizonShellProps> = ({ initialEvents }) => 
         onImportEvents={handleImportEvents}
         onResetToDemo={handleResetToDemo}
         onFetchLiveCultureData={handleFetchLiveCultureData}
+        onFetchFirestoreData={handleFetchFirestoreData}
+        onSyncToFirestore={handleSyncToFirestore}
         isFetchingLive={isFetchingLive}
       />
     </div>

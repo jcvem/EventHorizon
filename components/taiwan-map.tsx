@@ -91,16 +91,27 @@ export const TaiwanMap: React.FC<TaiwanMapProps> = ({
       </div>
 
       {/* Main Map SVG Viewport */}
-      <div className="relative flex-1 min-h-[420px] lg:min-h-[540px] flex items-center justify-center p-3 sm:p-6 bg-paper select-none">
+      <div className="relative flex-1 min-h-[420px] lg:min-h-[520px] flex items-center justify-center p-2 sm:p-4 bg-paper select-none overflow-hidden">
+        {/* HTML Backdrop Map Layer (Guarantees image remains visible regardless of right column list height) */}
+        <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-4 pointer-events-none z-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/taiwan_handdrawn.png"
+            alt="臺灣手繪地圖底圖"
+            className="w-full h-full max-h-[620px] object-contain opacity-95"
+            style={{ maxHeight: "calc(100vh - 200px)" }}
+          />
+        </div>
+
         {/* Subtle Map Coordinates / Watermark */}
-        <div className="absolute top-4 left-4 text-[11px] font-mono text-ink-faint pointer-events-none">
+        <div className="absolute top-4 left-4 text-[11px] font-mono text-ink-faint pointer-events-none z-10">
           <div>LAT 21°53′N – 25°18′N</div>
           <div>LNG 119°18′E – 122°00′E</div>
           <div className="mt-1 text-ink-muted">全臺目前活動：{totalEventsCount} 場</div>
         </div>
 
         {/* Active Selection Indicator */}
-        <div className="absolute top-4 right-4 bg-paper-card/90 backdrop-blur-sm border border-rule px-3 py-1.5 rounded text-xs text-ink-primary shadow-sm pointer-events-none">
+        <div className="absolute top-4 right-4 bg-paper-card/90 backdrop-blur-sm border border-rule px-3 py-1.5 rounded text-xs text-ink-primary shadow-sm pointer-events-none z-10">
           <div className="flex items-center gap-1.5 font-medium">
             <MapPin className="w-3.5 h-3.5 text-ochre" />
             <span>目前聚焦：</span>
@@ -112,8 +123,8 @@ export const TaiwanMap: React.FC<TaiwanMapProps> = ({
 
         <svg
           viewBox="0 0 500 700"
-          className="w-full h-full max-h-[640px] drop-shadow-sm"
-          style={{ maxHeight: "calc(100vh - 220px)" }}
+          className="relative z-10 w-full h-full max-h-[620px] drop-shadow-sm"
+          style={{ maxHeight: "calc(100vh - 200px)" }}
           role="img"
           aria-label="臺灣活動分布地圖"
         >
@@ -124,66 +135,36 @@ export const TaiwanMap: React.FC<TaiwanMapProps> = ({
           </defs>
 
           {/* Background subtle grid */}
-          <rect width="500" height="700" fill="url(#grid)" />
+          <rect width="500" height="700" fill="url(#grid)" opacity="0.3" />
 
-          {/* Surrounding Sea Outline Linework */}
+          {/* Hand-Drawn Taiwan Editorial Map Artwork Layer */}
+          <image
+            href="/taiwan_handdrawn.png"
+            xlinkHref="/taiwan_handdrawn.png"
+            x="0"
+            y="0"
+            width="500"
+            height="700"
+            preserveAspectRatio="none"
+            className="transition-opacity duration-300"
+            style={{ opacity: 0.95 }}
+          />
+
+          {/* Surrounding Sea Line & Compass Accents */}
           <path
             d="M 360,40 C 400,90 410,200 390,320 C 370,440 340,550 260,650"
             fill="none"
-            stroke="#E0D9C8"
+            stroke="#C4B89E"
             strokeWidth="0.75"
             strokeDasharray="4 4"
           />
           <path
             d="M 120,80 C 100,200 110,360 130,500"
             fill="none"
-            stroke="#E0D9C8"
+            stroke="#C4B89E"
             strokeWidth="0.75"
             strokeDasharray="4 4"
           />
-
-          {/* Taiwan Islands Geometries */}
-          <g className="taiwan-polygons" stroke="#BCB3A0" strokeWidth="1.2">
-            {/* Main Island */}
-            <path
-              d="M 345,65 C 358,68 368,75 363,85 C 354,95 368,115 372,135 C 378,155 362,180 357,210 C 352,240 357,270 352,300 C 347,330 337,360 327,395 C 317,430 307,465 292,500 C 277,535 257,565 237,590 C 222,610 207,620 197,618 C 187,616 184,605 182,590 C 177,565 162,540 152,510 C 142,480 137,450 140,420 C 144,390 150,360 157,330 C 164,300 172,270 182,240 C 192,210 207,185 227,160 C 247,135 272,110 297,90 C 317,75 332,62 345,65 Z"
-              fill="#F2ECE0"
-              className="transition-colors duration-200"
-            />
-            {/* Central Mountain Range Ridge Line */}
-            <path
-              d="M 330,120 Q 295,240 268,360 T 235,540"
-              fill="none"
-              stroke="#D2C8B5"
-              strokeWidth="1.5"
-              strokeDasharray="2 4"
-            />
-            {/* Penghu */}
-            <path
-              d="M 50,335 C 45,330 55,320 60,325 C 65,330 65,345 60,350 C 55,355 45,350 50,335 Z M 65,355 C 62,352 68,348 70,352 C 72,356 68,360 65,355 Z"
-              fill="#F2ECE0"
-            />
-            {/* Kinmen */}
-            <path
-              d="M 45,95 C 40,90 55,85 62,90 C 68,95 65,102 58,105 C 50,108 42,102 45,95 Z"
-              fill="#F2ECE0"
-            />
-            {/* Matsu */}
-            <path
-              d="M 72,48 C 70,44 78,42 82,45 C 85,48 82,54 78,54 C 74,54 70,51 72,48 Z"
-              fill="#F2ECE0"
-            />
-            {/* Green Island */}
-            <path
-              d="M 315,480 C 312,477 318,474 321,477 C 324,480 321,485 317,485 Z"
-              fill="#F2ECE0"
-            />
-            {/* Orchid Island */}
-            <path
-              d="M 325,550 C 320,545 328,540 332,545 C 335,550 332,558 327,558 Z"
-              fill="#F2ECE0"
-            />
-          </g>
 
           {/* City / County Markers */}
           {TAIWAN_CITIES.map((city) => {

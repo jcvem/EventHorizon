@@ -118,8 +118,25 @@ EventsHorizon/
    - 來源端點：`https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6`
    - 屬性：文化部藝文活動開放資料 API（已實際 curl 驗證其 JSON 欄位與連線能力）。
    - 當連線異常或無網路時，系統優雅維持本地資料，絕不捏造偽造假資料。
-3. **地圖向量圖資授權**：
-   - 向量幾何參考內政部國土測繪中心 (NLSC) 臺灣地圖與 OpenStreetMap (OSM) 開放資料。遵循開放政府資料授權規範。
+3. **地圖向量圖資授權與手繪風格地圖**：
+   - 繪製手繪典雅風格臺灣地圖 (`public/taiwan_handdrawn.png`)，精準投影 22 行政縣市（基隆、臺北、新北、桃園、新竹、苗栗、臺中、彰化、南投、雲林、嘉義、臺南、高雄、屏東、宜蘭、花蓮、臺東、澎湖、金門、馬祖）。
+
+---
+
+## 真實活動資料收集與數據庫架構 (Event Ingestion & DB Architecture)
+
+### 1. 如何收集真實活動？ (How to Collect Actual Events)
+正式上線營運時，建議建立自動化爬蟲與清洗管線 (Crawler Pipeline)：
+- **公部門開放資料 API**：介接中華民國文化部 API (`cloud.culture.tw`)。
+- **售票平台與展演網站**：使用 GitHub Actions / Cloud Cron 定時爬取或對接 Accupass, KKTIX, iNDIEVOX, Opentix 之公開 RSS / API 展演頁面。
+- **主辦單位自主投稿**：提供前端 JSON / 表單對話框匯入 (`import-modal.tsx`) 供策展單位提交。
+- **Gemini AI 自動增強與分類**：定時 Worker 呼叫 Gemini API 進行內文摘要、自動判斷縣市與標準 10 大主題領域分類。
+
+### 2. 是否需要 Firebase DB？ (Do You Need Firebase DB?)
+- **不強制使用 Firebase**，但營運端**強烈建議搭配雲端 DB** (Firebase Firestore 或 Supabase PostgreSQL)。
+- **推薦技術選型：Supabase (PostgreSQL)** 或 **Firebase Firestore**
+  - **Supabase**：原生支援 PostGIS 地理空間查詢與豐富 SQL 日期過濾，極度適合 30 天滾動視窗。
+  - **Firebase**：支援即時推送 (Realtime Update) 與免伺服器 (Serverless) 部署。
 
 ---
 

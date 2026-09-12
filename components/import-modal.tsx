@@ -20,6 +20,8 @@ interface ImportModalProps {
   onImportEvents: (newEvents: Event[]) => void;
   onResetToDemo: () => void;
   onFetchLiveCultureData: () => Promise<{ success: boolean; count: number; message: string }>;
+  onFetchFirestoreData?: () => Promise<{ success: boolean; count: number; message: string }>;
+  onSyncToFirestore?: () => Promise<{ success: boolean; count: number; message: string }>;
   isFetchingLive: boolean;
 }
 
@@ -29,6 +31,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   onImportEvents,
   onResetToDemo,
   onFetchLiveCultureData,
+  onFetchFirestoreData,
+  onSyncToFirestore,
   isFetchingLive,
 }) => {
   const [jsonText, setJsonText] = useState("");
@@ -62,6 +66,20 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   const handleTriggerLiveFetch = async () => {
     setLiveStatusMessage("正在連線文化部開放資料庫 (cloud.culture.tw)...");
     const res = await onFetchLiveCultureData();
+    setLiveStatusMessage(res.message);
+  };
+
+  const handleTriggerFirestoreFetch = async () => {
+    if (!onFetchFirestoreData) return;
+    setLiveStatusMessage("正在讀取 Firebase (joecalendar-e8327) Firestore...");
+    const res = await onFetchFirestoreData();
+    setLiveStatusMessage(res.message);
+  };
+
+  const handleTriggerFirestoreSync = async () => {
+    if (!onSyncToFirestore) return;
+    setLiveStatusMessage("正在寫入/同步至 Firebase (joecalendar-e8327) Firestore...");
+    const res = await onSyncToFirestore();
     setLiveStatusMessage(res.message);
   };
 
@@ -114,7 +132,42 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
         {/* Body */}
         <div className="p-5 overflow-y-auto space-y-5 text-xs text-ink-primary">
-          {/* Section 1: Live Public Open Data Fetch */}
+          {/* Section 1: Firebase Firestore (joecalendar-e8327) Integration */}
+          <div className="p-3.5 rounded border border-ochre-border bg-ochre-light/30 space-y-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <h4 className="font-serif text-sm font-bold text-ink-primary flex items-center gap-1.5">
+                  <Database className="w-4 h-4 text-ochre" />
+                  <span>Firebase 專屬雲端資料庫 (joecalendar-e8327)</span>
+                </h4>
+                <p className="text-ink-muted text-[11px] mt-0.5">
+                  專案 ID：<code className="font-mono text-ochre font-bold">joecalendar-e8327</code> · 集合 (Collection)：<code className="font-mono text-ink-primary">events</code>
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={isFetchingLive}
+                  onClick={handleTriggerFirestoreFetch}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-ink-primary text-paper-card hover:bg-ink-secondary disabled:opacity-50 transition-colors font-medium min-h-[36px]"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isFetchingLive ? "animate-spin text-ochre" : ""}`} />
+                  <span>載入 Firestore 資料</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={isFetchingLive}
+                  onClick={handleTriggerFirestoreSync}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-ochre text-white hover:bg-ochre-hover disabled:opacity-50 transition-colors font-medium min-h-[36px]"
+                >
+                  <UploadCloud className="w-3.5 h-3.5" />
+                  <span>同步至 Firestore</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Live Public Open Data Fetch */}
           <div className="p-3.5 rounded border border-rule bg-paper space-y-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div>
@@ -129,10 +182,10 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                 type="button"
                 disabled={isFetchingLive}
                 onClick={handleTriggerLiveFetch}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-ink-primary text-paper-card hover:bg-ink-secondary disabled:opacity-50 transition-colors font-medium min-h-[36px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-paper-subtle border border-rule hover:bg-paper-muted text-ink-primary disabled:opacity-50 transition-colors font-medium min-h-[36px]"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isFetchingLive ? "animate-spin text-ochre" : ""}`} />
-                <span>{isFetchingLive ? "讀取中..." : "載入即時開放資料"}</span>
+                <span>載入即時開放資料</span>
               </button>
             </div>
 
